@@ -18,29 +18,23 @@ import (
 type RecipeIngredient struct {
 
 	// is missed
-	// Required: true
-	IsMissed *bool `json:"isMissed"`
+	IsMissed bool `json:"isMissed,omitempty"`
 
 	// name
 	// Required: true
 	Name *string `json:"name"`
 
+	// owner name
+	OwnerName string `json:"ownerName,omitempty"`
+
 	// product ID
 	// Required: true
 	ProductID *string `json:"productID"`
-
-	// user ID
-	// Required: true
-	UserID *string `json:"userID"`
 }
 
 // Validate validates this recipe ingredient
 func (m *RecipeIngredient) Validate(formats strfmt.Registry) error {
 	var res []error
-
-	if err := m.validateIsMissed(formats); err != nil {
-		res = append(res, err)
-	}
 
 	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
@@ -50,22 +44,9 @@ func (m *RecipeIngredient) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateUserID(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *RecipeIngredient) validateIsMissed(formats strfmt.Registry) error {
-
-	if err := validate.Required("isMissed", "body", m.IsMissed); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -81,15 +62,6 @@ func (m *RecipeIngredient) validateName(formats strfmt.Registry) error {
 func (m *RecipeIngredient) validateProductID(formats strfmt.Registry) error {
 
 	if err := validate.Required("productID", "body", m.ProductID); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *RecipeIngredient) validateUserID(formats strfmt.Registry) error {
-
-	if err := validate.Required("userID", "body", m.UserID); err != nil {
 		return err
 	}
 

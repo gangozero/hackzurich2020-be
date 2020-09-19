@@ -11,3 +11,11 @@ CREATE TABLE public.users
 );
 
 CREATE UNIQUE INDEX users_nondel_idx ON users (email) WHERE is_deleted = false;
+
+
+CREATE TABLE public.products
+(
+    productID TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    userID UUID NOT NULL REFERENCES public.users(id)
+);

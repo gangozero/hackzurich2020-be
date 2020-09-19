@@ -33,6 +33,12 @@ type RecipeDetails struct {
 	// Required: true
 	Name *string `json:"name"`
 
+	// partner distance
+	PartnerDistance int64 `json:"partnerDistance,omitempty"`
+
+	// partner name
+	PartnerName string `json:"partnerName,omitempty"`
+
 	// steps
 	Steps string `json:"steps,omitempty"`
 }

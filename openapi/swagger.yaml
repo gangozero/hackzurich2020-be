@@ -102,8 +102,6 @@ definitions:
     required:
       - productID
       - name
-      - isMissed
-      - userID
     properties:
       productID:
         type: string
@@ -111,7 +109,7 @@ definitions:
         type: string
       isMissed:
         type: boolean
-      userID:
+      ownerName:
         type: string
 
   recipeDetails:
@@ -132,6 +130,10 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/recipeIngredient"
+      partnerName:
+        type: string
+      partnerDistance:
+        type: integer
 
   chatItemType:
     type: string

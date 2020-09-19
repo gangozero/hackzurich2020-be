@@ -482,6 +482,12 @@ func init() {
         "name": {
           "type": "string"
         },
+        "partnerDistance": {
+          "type": "integer"
+        },
+        "partnerName": {
+          "type": "string"
+        },
         "steps": {
           "type": "string"
         }
@@ -491,9 +497,7 @@ func init() {
       "type": "object",
       "required": [
         "productID",
-        "name",
-        "isMissed",
-        "userID"
+        "name"
       ],
       "properties": {
         "isMissed": {
@@ -502,10 +506,10 @@ func init() {
         "name": {
           "type": "string"
         },
-        "productID": {
+        "ownerName": {
           "type": "string"
         },
-        "userID": {
+        "productID": {
           "type": "string"
         }
       }
@@ -1026,6 +1030,12 @@ func init() {
         "name": {
           "type": "string"
         },
+        "partnerDistance": {
+          "type": "integer"
+        },
+        "partnerName": {
+          "type": "string"
+        },
         "steps": {
           "type": "string"
         }
@@ -1035,9 +1045,7 @@ func init() {
       "type": "object",
       "required": [
         "productID",
-        "name",
-        "isMissed",
-        "userID"
+        "name"
       ],
       "properties": {
         "isMissed": {
@@ -1046,10 +1054,10 @@ func init() {
         "name": {
           "type": "string"
         },
-        "productID": {
+        "ownerName": {
           "type": "string"
         },
-        "userID": {
+        "productID": {
           "type": "string"
         }
       }

@@ -48,6 +48,8 @@ func main() {
 	api.BearerAuth = srv.Validate
 
 	api.UserLoginHandler = srv.UserLoginHandler()
+	api.UserGetProductListHandler = srv.UserGetProductListHandler()
+	api.UserDeleteProductHandler = srv.UserDeleteProductHandler()
 
 	server := restapi.NewServer(api)
 	defer server.Shutdown()

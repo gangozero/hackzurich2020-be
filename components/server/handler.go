@@ -20,3 +20,41 @@ func (s *Server) UserLoginHandler() user.LoginHandler {
 		return user.NewLoginOK().WithPayload(resp)
 	})
 }
+
+func (s *Server) UserGetProductListHandler() user.GetProductListHandler {
+	return user.GetProductListHandlerFunc(func(params user.GetProductListParams, principal interface{}) middleware.Responder {
+		userID, err := getUserFromBearer(principal)
+		if err != nil {
+			log.Printf("[GetProductList] Error: %s", err.Error())
+			return user.NewGetProductListDefault(401)
+		}
+
+		resp, err := s.GetProductList(params.HTTPRequest.Context(), userID)
+		if err != nil {
+			log.Printf("[GetProductList] Error: %s", err.Error())
+			return user.NewGetProductListDefault(500)
+		}
+		if resp == nil {
+			return user.NewGetProductListDefault(404)
+		}
+		return user.NewGetProductListOK().WithPayload(resp)
+	})
+}
+
+func (s *Server) UserDeleteProductHandler() user.DeleteProductHandler {
+	return user.DeleteProductHandlerFunc(func(params user.DeleteProductParams, principal interface{}) middleware.Responder {
+		userID, err := getUserFromBearer(principal)
+		if err != nil {
+			log.Printf("[DeleteProduct] Error: %s", err.Error())
+			return user.NewDeleteProductDefault(401)
+		}
+
+		err = s.DeleteProduct(params.HTTPRequest.Context(), userID, params.ID)
+		if err != nil {
+			log.Printf("[DeleteProduct] Error: %s", err.Error())
+			return user.NewDeleteProductDefault(500)
+		}
+
+		return user.NewDeleteProductNoContent()
+	})
+}
