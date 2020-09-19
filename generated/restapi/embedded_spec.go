@@ -546,6 +546,7 @@ func init() {
     "recipeMatchState": {
       "type": "string",
       "enum": [
+        "NEW",
         "INVITED",
         "ACCEPTED",
         "NOT_NOW"
@@ -1082,6 +1083,7 @@ func init() {
     "recipeMatchState": {
       "type": "string",
       "enum": [
+        "NEW",
         "INVITED",
         "ACCEPTED",
         "NOT_NOW"

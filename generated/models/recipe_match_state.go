@@ -20,6 +20,9 @@ type RecipeMatchState string
 
 const (
 
+	// RecipeMatchStateNEW captures enum value "NEW"
+	RecipeMatchStateNEW RecipeMatchState = "NEW"
+
 	// RecipeMatchStateINVITED captures enum value "INVITED"
 	RecipeMatchStateINVITED RecipeMatchState = "INVITED"
 
@@ -35,7 +38,7 @@ var recipeMatchStateEnum []interface{}
 
 func init() {
 	var res []RecipeMatchState
-	if err := json.Unmarshal([]byte(`["INVITED","ACCEPTED","NOT_NOW"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["NEW","INVITED","ACCEPTED","NOT_NOW"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
