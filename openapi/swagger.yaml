@@ -1,0 +1,368 @@
+swagger: "2.0"
+info:
+  description: |
+    HackZurich 2020 API
+  title: HackZurich 2020
+  version: 1.0.0
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+basePath: /api/v1
+
+definitions:
+  error:
+    type: object
+    required:
+      - message
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      path:
+        type: string
+
+  loginRequest:
+    required:
+      - email
+    type: object
+    properties:
+      email:
+        type: string
+        format: email
+        description: email
+
+  loginResponse:
+    type: object
+    properties:
+      token:
+        type: string
+        description: auth token
+
+  product:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+
+  productList:
+    type: array
+    items:
+      $ref: "#/definitions/product"
+
+  recipeMatchState:
+    type: string
+    enum:
+      - INVITED
+      - ACCEPTED
+      - NOT_NOW
+
+  recipeMatch:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      state:
+        $ref: "#/definitions/recipeMatchState"
+      isFull:
+        type: boolean
+      isColleague:
+        type: boolean
+      distance:
+        type: integer
+
+  recipeMatchList:
+    type: array
+    items:
+      $ref: "#/definitions/recipeMatch"
+
+  recipeIngredient:
+    type: object
+    required:
+      - productID
+      - name
+      - isMissed
+      - userID
+    properties:
+      productID:
+        type: string
+      name:
+        type: string
+      isMissed:
+        type: boolean
+      userID:
+        type: string
+
+  recipeDetails:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      imageURL:
+        type: string
+      steps:
+        type: string
+      ingredients:
+        type: array
+        items:
+          $ref: "#/definitions/recipeIngredient"
+
+  chatItemType:
+    type: string
+    enum:
+      - RECIPE
+      - MESSAGE
+      - INGREDIENT
+      - INGREDIENT_ACTION
+
+  ingredientActionOptions:
+    type: object
+    properties:
+      productID:
+        type: string
+      name:
+        type: string
+      delivery:
+        type: integer
+      shop:
+        type: string
+
+  chatItemData:
+    type: object
+    properties:
+      message:
+        type: string
+      recipe:
+        $ref: "#/definitions/recipeDetails"
+      missedIngredients:
+        type: array
+        items:
+          $ref: "#/definitions/ingredientActionOptions"
+
+  chatItem:
+    type: object
+    required:
+      - type
+      - data
+    properties:
+      id:
+        type: string
+      type:
+        $ref: "#/definitions/chatItemType"
+      data:
+        $ref: "#/definitions/chatItemData"
+
+  chatItemList:
+    type: array
+    items:
+      $ref: "#/definitions/chatItem"
+
+paths:
+  /login:
+    post:
+      operationId: login
+      summary: User login
+      tags:
+        - user
+      parameters:
+        - name: data
+          in: body
+          schema:
+            $ref: "#/definitions/loginRequest"
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/loginResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/error"
+
+  /product:
+    get:
+      operationId: getProductList
+      summary: Get list of user products
+      tags:
+        - user
+      security:
+        - bearer: []
+      responses:
+        200:
+          description: Product list
+          schema:
+            $ref: "#/definitions/productList"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/error"
+
+  /product/{id}:
+    delete:
+      operationId: deleteProduct
+      summary: Delete product from user list
+      tags:
+        - user
+      security:
+        - bearer: []
+      parameters:
+        - type: string
+          name: id
+          in: path
+          required: true
+      responses:
+        204:
+          description: Product deleted
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/error"
+
+  /match:
+    get:
+      operationId: getRecipeMatchList
+      summary: Get recipes matched for user
+      tags:
+        - user
+      security:
+        - bearer: []
+      responses:
+        200:
+          description: Recipe list
+          schema:
+            $ref: "#/definitions/recipeMatchList"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/error"
+
+  /match/{id}:
+    get:
+      operationId: getRecipeDetails
+      summary: Get details of the matched recipe
+      tags:
+        - user
+      security:
+        - bearer: []
+      parameters:
+        - type: string
+          name: id
+          in: path
+          required: true
+      responses:
+        200:
+          description: Recipe details
+          schema:
+            $ref: "#/definitions/recipeDetails"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/error"
+
+    put:
+      operationId: initiateCooking
+      summary: Invite to cook together
+      tags:
+        - user
+      security:
+        - bearer: []
+      parameters:
+        - type: string
+          name: id
+          in: path
+          required: true
+      responses:
+        204:
+          description: Invited
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/error"
+
+    delete:
+      operationId: rejectCooking
+      summary: Tell other part that not now.
+      tags:
+        - user
+      security:
+        - bearer: []
+      parameters:
+        - type: string
+          name: id
+          in: path
+          required: true
+      responses:
+        204:
+          description: Rejected
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/error"
+
+  /match/{id}/chat:
+    get:
+      operationId: getChatItems
+      summary: Get items from the chat
+      tags:
+        - user
+      security:
+        - bearer: []
+      parameters:
+        - type: string
+          name: id
+          in: path
+          required: true
+      responses:
+        200:
+          description: Recipe details
+          schema:
+            $ref: "#/definitions/chatItemList"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/error"
+
+    post:
+      operationId: postChatItem
+      summary: Post new chat item
+      tags:
+        - user
+      security:
+        - bearer: []
+      parameters:
+        - type: string
+          name: id
+          in: path
+          required: true
+        - name: data
+          in: body
+          schema:
+            $ref: "#/definitions/chatItem"
+          required: true
+      responses:
+        204:
+          description: Posted
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/error"
