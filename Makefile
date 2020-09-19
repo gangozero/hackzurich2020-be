@@ -7,8 +7,8 @@ PROJECT_TOOL_PATH=/go/src/github.com/gangozero/$(PROJECT_NAME)
 SWAGGER_VERSION=v0.25.0
 SWAGGER_CMD=docker run --rm -it -v $(PROJECT_ROOT):$(PROJECT_TOOL_PATH) -w $(PROJECT_TOOL_PATH) quay.io/goswagger/swagger:$(SWAGGER_VERSION)
 
-DOCKER_REPO=github.com/gangozero/$(PROJECT_NAME)
-VERSION=0.01
+DOCKER_REPO=hackzurich2020.azurecr.io/$(PROJECT_NAME)
+VERSION=0.02
 TAG=$(DOCKER_REPO):$(VERSION)
 
 .DEFAULT_GOAL: validate
@@ -22,7 +22,7 @@ validate:
 	$(SWAGGER_CMD) validate ./openapi/swagger.yaml
 
 generate-full:
-	$(SWAGGER_CMD) generate server -A $(PROJECT_NAME) -f ./openapi/swagger.yaml --target ./generated
+	$(SWAGGER_CMD) generate server -A 	$(PROJECT_NAME) -f ./openapi/swagger.yaml --target ./generated
 
 generate:
 	$(SWAGGER_CMD) generate server -A $(PROJECT_NAME) -f ./openapi/swagger.yaml --target ./generated --exclude-main
@@ -31,13 +31,13 @@ vendor:
 	go mod vendor
 
 build:
-	go build ./generated/cmd/$(PROJECT_NAME)-server
+	go build .
 
 run:
-	godotenv -f ./local/.env ./$(PROJECT_NAME)-server --scheme=http --host=0.0.0.0 --port=8080
+	godotenv -f ./local/.env ./$(PROJECT_NAME) --scheme=http --host=0.0.0.0 --port=8080
 
 docker-login:
-	docker login -u $(DOCKER_USER) -p $(DOCKER_TOKEN) $(DOCKER_URL)
+	az acr login --name hackzurich2020
 
 docker-build:
 	docker build --pull -f ./deployment/Dockerfile -t $(TAG) .
