@@ -58,3 +58,23 @@ func (s *Server) UserDeleteProductHandler() user.DeleteProductHandler {
 		return user.NewDeleteProductNoContent()
 	})
 }
+
+func (s *Server) UserGetRecipeMatchListHandler() user.GetRecipeMatchListHandler {
+	return user.GetRecipeMatchListHandlerFunc(func(params user.GetRecipeMatchListParams, principal interface{}) middleware.Responder {
+		userID, err := getUserFromBearer(principal)
+		if err != nil {
+			log.Printf("[GetRecipeMatchList] Error: %s", err.Error())
+			return user.NewGetRecipeMatchListDefault(401)
+		}
+
+		resp, err := s.GetRecipeMatchList(params.HTTPRequest.Context(), userID)
+		if err != nil {
+			log.Printf("[GetRecipeMatchList] Error: %s", err.Error())
+			return user.NewGetRecipeMatchListDefault(500)
+		}
+		if resp == nil {
+			return user.NewGetRecipeMatchListDefault(404)
+		}
+		return user.NewGetRecipeMatchListOK().WithPayload(resp)
+	})
+}

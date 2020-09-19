@@ -87,8 +87,10 @@ definitions:
         $ref: "#/definitions/recipeMatchState"
       isFull:
         type: boolean
+        x-omitempty: false
       isColleague:
         type: boolean
+        x-omitempty: false
       distance:
         type: integer
 
@@ -109,6 +111,7 @@ definitions:
         type: string
       isMissed:
         type: boolean
+        x-omitempty: false
       ownerName:
         type: string
 

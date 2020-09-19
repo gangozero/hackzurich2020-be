@@ -501,7 +501,8 @@ func init() {
       ],
       "properties": {
         "isMissed": {
-          "type": "boolean"
+          "type": "boolean",
+          "x-omitempty": false
         },
         "name": {
           "type": "string"
@@ -528,10 +529,12 @@ func init() {
           "type": "string"
         },
         "isColleague": {
-          "type": "boolean"
+          "type": "boolean",
+          "x-omitempty": false
         },
         "isFull": {
-          "type": "boolean"
+          "type": "boolean",
+          "x-omitempty": false
         },
         "name": {
           "type": "string"
@@ -1049,7 +1052,8 @@ func init() {
       ],
       "properties": {
         "isMissed": {
-          "type": "boolean"
+          "type": "boolean",
+          "x-omitempty": false
         },
         "name": {
           "type": "string"
@@ -1076,10 +1080,12 @@ func init() {
           "type": "string"
         },
         "isColleague": {
-          "type": "boolean"
+          "type": "boolean",
+          "x-omitempty": false
         },
         "isFull": {
-          "type": "boolean"
+          "type": "boolean",
+          "x-omitempty": false
         },
         "name": {
           "type": "string"

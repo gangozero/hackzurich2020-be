@@ -19,3 +19,15 @@ CREATE TABLE public.products
     name TEXT NOT NULL,
     userID UUID NOT NULL REFERENCES public.users(id)
 );
+
+
+CREATE TABLE public.matching
+(
+    id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+    name TEXT NOT NULL,
+    state TEXT NOT NULL,
+    is_full BOOLEAN NOT NULL,
+    is_colleague BOOLEAN NOT NULL,
+    distance INTEGER NOT NULL,
+    details JSONB NOT NULL DEFAULT '{}'::jsonb
+);

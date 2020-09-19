@@ -25,10 +25,10 @@ type RecipeMatch struct {
 	ID *string `json:"id"`
 
 	// is colleague
-	IsColleague bool `json:"isColleague,omitempty"`
+	IsColleague bool `json:"isColleague"`
 
 	// is full
-	IsFull bool `json:"isFull,omitempty"`
+	IsFull bool `json:"isFull"`
 
 	// name
 	// Required: true

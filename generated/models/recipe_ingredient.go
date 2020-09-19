@@ -18,7 +18,7 @@ import (
 type RecipeIngredient struct {
 
 	// is missed
-	IsMissed bool `json:"isMissed,omitempty"`
+	IsMissed bool `json:"isMissed"`
 
 	// name
 	// Required: true
