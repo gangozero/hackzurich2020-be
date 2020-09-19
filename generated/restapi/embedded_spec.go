@@ -552,6 +552,13 @@ func init() {
         "NOT_NOW"
       ]
     }
+  },
+  "securityDefinitions": {
+    "bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
   }
 }`))
 	FlatSwaggerJSON = json.RawMessage([]byte(`{
@@ -1088,6 +1095,13 @@ func init() {
         "ACCEPTED",
         "NOT_NOW"
       ]
+    }
+  },
+  "securityDefinitions": {
+    "bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
     }
   }
 }`))

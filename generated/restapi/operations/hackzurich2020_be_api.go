@@ -71,6 +71,13 @@ func NewHackzurich2020BeAPI(spec *loads.Document) *Hackzurich2020BeAPI {
 		UserRejectCookingHandler: user.RejectCookingHandlerFunc(func(params user.RejectCookingParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation user.RejectCooking has not yet been implemented")
 		}),
+
+		// Applies when the "Authorization" header is set
+		BearerAuth: func(token string) (interface{}, error) {
+			return nil, errors.NotImplemented("api key auth (bearer) Authorization from header param [Authorization] has not yet been implemented")
+		},
+		// default authorizer is authorized meaning no requests are blocked
+		APIAuthorizer: security.Authorized(),
 	}
 }
 
@@ -105,6 +112,13 @@ type Hackzurich2020BeAPI struct {
 	// JSONProducer registers a producer for the following mime types:
 	//   - application/json
 	JSONProducer runtime.Producer
+
+	// BearerAuth registers a function that takes a token and returns a principal
+	// it performs authentication based on an api key Authorization provided in the header
+	BearerAuth func(string) (interface{}, error)
+
+	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
+	APIAuthorizer runtime.Authorizer
 
 	// UserDeleteProductHandler sets the operation handler for the delete product operation
 	UserDeleteProductHandler user.DeleteProductHandler
@@ -200,6 +214,10 @@ func (o *Hackzurich2020BeAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
+	if o.BearerAuth == nil {
+		unregistered = append(unregistered, "AuthorizationAuth")
+	}
+
 	if o.UserDeleteProductHandler == nil {
 		unregistered = append(unregistered, "user.DeleteProductHandler")
 	}
@@ -242,12 +260,21 @@ func (o *Hackzurich2020BeAPI) ServeErrorFor(operationID string) func(http.Respon
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
 func (o *Hackzurich2020BeAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
-	return nil
+	result := make(map[string]runtime.Authenticator)
+	for name := range schemes {
+		switch name {
+		case "bearer":
+			scheme := schemes[name]
+			result[name] = o.APIKeyAuthenticator(scheme.Name, scheme.In, o.BearerAuth)
+
+		}
+	}
+	return result
 }
 
 // Authorizer returns the registered authorizer
 func (o *Hackzurich2020BeAPI) Authorizer() runtime.Authorizer {
-	return nil
+	return o.APIAuthorizer
 }
 
 // ConsumersFor gets the consumers for the specified media types.

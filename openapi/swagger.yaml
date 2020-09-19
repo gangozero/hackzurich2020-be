@@ -13,6 +13,12 @@ produces:
   - application/json
 basePath: /api/v1
 
+securityDefinitions:
+  bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+
 definitions:
   error:
     type: object
