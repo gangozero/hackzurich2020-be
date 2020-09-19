@@ -6,6 +6,7 @@ CREATE TABLE public.users
     name TEXT NOT NULL,
     email TEXT NOT NULL,
     migrosID TEXT NOT NULL,
+    address TEXT NOT NULL,
     is_deleted BOOLEAN NOT NULL DEFAULT false
 );
 

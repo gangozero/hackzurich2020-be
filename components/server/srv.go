@@ -14,6 +14,6 @@ func NewServer(db *pgxpool.Pool) *Server {
 }
 
 // Validate function just return header that include userID
-func (srv *Server) Validate(header string) (interface{}, error) {
+func (s *Server) Validate(header string) (interface{}, error) {
 	return header, nil
 }

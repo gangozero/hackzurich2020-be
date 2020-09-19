@@ -47,7 +47,7 @@ func main() {
 	api := operations.NewHackzurich2020BeAPI(swaggerSpec)
 	api.BearerAuth = srv.Validate
 
-	//TODO: add implementations
+	api.UserLoginHandler = srv.UserLoginHandler()
 
 	server := restapi.NewServer(api)
 	defer server.Shutdown()
