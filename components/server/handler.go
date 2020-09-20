@@ -72,9 +72,26 @@ func (s *Server) UserGetRecipeMatchListHandler() user.GetRecipeMatchListHandler 
 			log.Printf("[GetRecipeMatchList] Error: %s", err.Error())
 			return user.NewGetRecipeMatchListDefault(500)
 		}
-		if resp == nil {
-			return user.NewGetRecipeMatchListDefault(404)
-		}
 		return user.NewGetRecipeMatchListOK().WithPayload(resp)
+	})
+}
+
+func (s *Server) UserGetRecipeDetailsHandler() user.GetRecipeDetailsHandler {
+	return user.GetRecipeDetailsHandlerFunc(func(params user.GetRecipeDetailsParams, principal interface{}) middleware.Responder {
+		userID, err := getUserFromBearer(principal)
+		if err != nil {
+			log.Printf("[GetRecipeDetails] Error: %s", err.Error())
+			return user.NewGetRecipeDetailsDefault(401)
+		}
+
+		resp, err := s.GetRecipeDetails(params.HTTPRequest.Context(), userID, params.ID)
+		if err != nil {
+			log.Printf("[GetRecipeDetails] Error: %s", err.Error())
+			return user.NewGetRecipeDetailsDefault(500)
+		}
+		if resp == nil {
+			return user.NewGetRecipeDetailsDefault(404)
+		}
+		return user.NewGetRecipeDetailsOK().WithPayload(resp)
 	})
 }

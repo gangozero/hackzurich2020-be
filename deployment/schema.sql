@@ -29,5 +29,6 @@ CREATE TABLE public.matching
     is_full BOOLEAN NOT NULL,
     is_colleague BOOLEAN NOT NULL,
     distance INTEGER NOT NULL,
-    details JSONB NOT NULL DEFAULT '{}'::jsonb
+    details JSONB NOT NULL DEFAULT '{}'::jsonb,
+    messages JSONB NOT NULL DEFAULT '[]'::jsonb
 );
