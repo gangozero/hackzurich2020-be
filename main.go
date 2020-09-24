@@ -52,6 +52,7 @@ func main() {
 	api.UserDeleteProductHandler = srv.UserDeleteProductHandler()
 	api.UserGetRecipeMatchListHandler = srv.UserGetRecipeMatchListHandler()
 	api.UserGetRecipeDetailsHandler = srv.UserGetRecipeDetailsHandler()
+	api.UserGetChatItemsHandler = srv.UserGetChatItemsHandler()
 
 	server := restapi.NewServer(api)
 	defer server.Shutdown()

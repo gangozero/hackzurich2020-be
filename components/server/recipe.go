@@ -107,3 +107,28 @@ func (s *Server) GetRecipeDetails(ctx context.Context, userID, matchID string) (
 		PartnerDistance: distance,
 	}, nil
 }
+
+func (s *Server) GetChatItems(ctx context.Context, userID, matchID string) (models.ChatItemList, error) {
+	conn, err := s.db.Acquire(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("Can't acquire DB connection from pool: %s", err.Error())
+	}
+	defer conn.Release()
+
+	query := `SELECT messages
+				FROM public.matching 
+				WHERE id=$1;`
+
+	var result []*models.ChatItem
+
+	err = conn.QueryRow(ctx, query, matchID).Scan(&result)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return models.ChatItemList(result), nil
+		}
+		log.Printf("Error getting list of messages: %s", err.Error())
+		return nil, fmt.Errorf("Error getting list of messages")
+	}
+
+	return models.ChatItemList(result), nil
+}

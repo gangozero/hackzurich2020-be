@@ -95,3 +95,20 @@ func (s *Server) UserGetRecipeDetailsHandler() user.GetRecipeDetailsHandler {
 		return user.NewGetRecipeDetailsOK().WithPayload(resp)
 	})
 }
+
+func (s *Server) UserGetChatItemsHandler() user.GetChatItemsHandler {
+	return user.GetChatItemsHandlerFunc(func(params user.GetChatItemsParams, principal interface{}) middleware.Responder {
+		userID, err := getUserFromBearer(principal)
+		if err != nil {
+			log.Printf("[GetChatItems] Error: %s", err.Error())
+			return user.NewGetChatItemsDefault(401)
+		}
+
+		resp, err := s.GetChatItems(params.HTTPRequest.Context(), userID, params.ID)
+		if err != nil {
+			log.Printf("[GetChatItems] Error: %s", err.Error())
+			return user.NewGetChatItemsDefault(500)
+		}
+		return user.NewGetChatItemsOK().WithPayload(resp)
+	})
+}
